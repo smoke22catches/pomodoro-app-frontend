@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import TimerButton from "../elements/TimerButton";
+import TimerClock from "../elements/TimerClock";
+
+const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in milliseconds
 
 export default function Timer() {
   const [currentTimer, setCurrentTimer] = useState<TimerType>(TimerType.FOCUS);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
 
   return (
     <div className="max-w-sm mx-auto bg-red pb-8vh mt-[10%]">
@@ -26,12 +30,16 @@ export default function Timer() {
             onClick={() => setCurrentTimer(TimerType.LONG_BREAK)}
           />
         </div>
-        <p className="text-center text-9xl">25:00</p>
+        <TimerClock
+          time={MINUTES_25}
+          action={isTimerRunning ? "START" : "PAUSE"}
+        />
         <button
           className="border-solid border-2 border-white text-center ml-[20%] mr-[20%] text-[30px] rounded-[20px]
         hover:border-red hover:bg-white hover:text-red"
+          onClick={() => setIsTimerRunning(!isTimerRunning)}
         >
-          Start
+          {isTimerRunning ? "Pause" : "Start"}
         </button>
       </div>
     </div>
