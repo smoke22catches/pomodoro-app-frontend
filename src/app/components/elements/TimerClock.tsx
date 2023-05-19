@@ -1,13 +1,13 @@
 import { useState, useReducer, useEffect } from "react";
-import { millisecondsToPrintableTime } from "../../utils/time";
+import { millisecondsToPrintableTime } from "../../../utils/time";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setPomodoroTime } from "../../../redux/features/timerSlice";
 
 export default function TimerClock(props: TimerClockProps) {
-  const time = 25 * 60 * 1000;
+  const dispatch = useAppDispatch();
+  const time = useAppSelector((state) => state.timerSlice.pomodoroTime);
   const { action } = props;
-  const [formatedTime, setFormatedTime] = useState<string>(
-    millisecondsToPrintableTime(time)
-  );
-  const [timeToEnd, setTimeToEnd] = useState<number>(time);
+  const formatedTime = millisecondsToPrintableTime(time);
   const [lastTimeCheckpoint, setLastTimeCheckpoint] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<Interval>();
   const [status, setStatus] = useState<TimerClockStatus>("PAUSED");
@@ -19,9 +19,10 @@ export default function TimerClock(props: TimerClockProps) {
 
       const newIntervalId = setInterval(() => {
         const timePassed = Date.now() - lastTimeCheckpoint;
-        setTimeToEnd(() => timeToEnd - timePassed);
         setLastTimeCheckpoint(() => Date.now());
-        setFormatedTime(() => millisecondsToPrintableTime(timeToEnd));
+        // todo changed time
+        dispatch(setPomodoroTime(time - timePassed));
+        // setFormatedTime(() => millisecondsToPrintableTime(timeToEnd));
       }, 500);
 
       setIntervalId(newIntervalId);
@@ -30,8 +31,9 @@ export default function TimerClock(props: TimerClockProps) {
 
     const onPause = () => {
       const timePassed = Date.now() - lastTimeCheckpoint;
-      setTimeToEnd(() => timeToEnd - timePassed);
-      setFormatedTime(() => millisecondsToPrintableTime(timeToEnd));
+      // todo changed time
+      dispatch(setPomodoroTime(time - timePassed));
+      // setFormatedTime(() => millisecondsToPrintableTime(timeToEnd));
       setLastTimeCheckpoint(() => Date.now());
     };
 
@@ -45,7 +47,7 @@ export default function TimerClock(props: TimerClockProps) {
         }
       }
     }
-  }, [action, status, timeToEnd, lastTimeCheckpoint]);
+  }, [action, lastTimeCheckpoint]);
 
   return <p className="text-center text-9xl">{formatedTime}</p>;
 }

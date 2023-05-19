@@ -6,7 +6,7 @@ import {
   AiFillClockCircle,
   AiFillCloseSquare,
 } from "react-icons/ai";
-import SettingsTimerField from "../elements/SettingsTimerField";
+import SettingsDialogTimerSection from "../elements/SettingsDialogTimerSection";
 
 export default function SettingsDialog() {
   return (
@@ -42,11 +42,7 @@ export default function SettingsDialog() {
               <h3 className="align-middle inline-block">Timer</h3>
             </div>
             <p>Time (minutes)</p>
-            <div className="flex flex-row">
-              <SettingsTimerField label="Pomodoro" defaultTime={25} />
-              <SettingsTimerField label="Short Break" defaultTime={5} />
-              <SettingsTimerField label="Long Break" defaultTime={15} />
-            </div>
+            <SettingsDialogTimerSection className="flex flex-row" />
           </div>
         </Dialog.Content>
       </Dialog.Portal>

@@ -20,3 +20,11 @@ export function millisecondsToPrintableTime(ms: number): string {
     const secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`;
     return `${minutesString}:${secondsString}`;
 }
+
+export function millisecondsToMinutes(ms: number): number {
+    return Math.round(ms / MS_IN_MINUTE);
+}
+
+export function minutesToMilliseconds(minutes: number): number {
+    return minutes * MS_IN_MINUTE;
+}
