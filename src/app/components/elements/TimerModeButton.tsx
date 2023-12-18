@@ -1,6 +1,6 @@
 import { Clickable } from "../interfaces/Clickable";
 
-export default function TimerButton(props: TimerButtonProps) {
+export default function TimerModeButton(props: TimerButtonProps) {
   const { name, active, onClick } = props;
 
   // Tailwind classes

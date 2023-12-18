@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import TimerButton from "../elements/TimerButton";
+import TimerModeButton from "../elements/TimerModeButton";
 import TimerClock from "../elements/TimerClock";
+import TimerStartButton from "../elements/TimerStartButton";
 
 const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in milliseconds
 
@@ -14,17 +15,17 @@ export default function Timer() {
     <div className="max-w-sm mx-auto bg-red pb-8vh mt-[10%]">
       <div className="flex flex-col place-content-evenly w-[25rem] h-[20rem]">
         <div className="flex place-content-evenly">
-          <TimerButton
+          <TimerModeButton
             name="Pomodoro"
             active={currentTimer === TimerType.FOCUS}
             onClick={() => setCurrentTimer(TimerType.FOCUS)}
           />
-          <TimerButton
+          <TimerModeButton
             name="Short Break"
             active={currentTimer === TimerType.SHORT_BREAK}
             onClick={() => setCurrentTimer(TimerType.SHORT_BREAK)}
           />
-          <TimerButton
+          <TimerModeButton
             name="Long Break"
             active={currentTimer === TimerType.LONG_BREAK}
             onClick={() => setCurrentTimer(TimerType.LONG_BREAK)}
@@ -34,13 +35,12 @@ export default function Timer() {
           time={MINUTES_25}
           action={isTimerRunning ? "START" : "PAUSE"}
         />
-        <button
+        <TimerStartButton
+          isTimerRunning={isTimerRunning}
+          onClick={() => setIsTimerRunning(!isTimerRunning)}
           className="border-solid border-2 border-white text-center ml-[20%] mr-[20%] text-[30px] rounded-[20px]
         hover:border-red hover:bg-white hover:text-red"
-          onClick={() => setIsTimerRunning(!isTimerRunning)}
-        >
-          {isTimerRunning ? "Pause" : "Start"}
-        </button>
+        />
       </div>
     </div>
   );
