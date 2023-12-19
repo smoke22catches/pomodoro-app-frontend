@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TimeAndTimerTypePayload } from "../types";
+import { TimerType } from "../../app/types";
 
 const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in milliseconds
 const MINUTES_5 = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -8,33 +10,67 @@ const MINUTES_15 = 15 * 60 * 1000; // 15 minutes in milliseconds
  * Every time set in milliseconds
  */
 type PomodoroTimerState = {
-    pomodoroTime: number;
-    shortBreakTime: number;
-    longBreakTime: number;
+  defaultPomodoroTime: number;
+  defaultShortBreakTime: number;
+  defaultLongBreakTime: number;
 
-}
+  currentPomodoroTime: number;
+  currentShortBreakTime: number;
+  currentLongBreakTime: number;
+};
 
 const initialState: PomodoroTimerState = {
-    pomodoroTime: MINUTES_25,
-    shortBreakTime: MINUTES_5,
-    longBreakTime: MINUTES_15,
-}
+  defaultPomodoroTime: MINUTES_25,
+  defaultShortBreakTime: MINUTES_5,
+  defaultLongBreakTime: MINUTES_15,
+
+  currentPomodoroTime: MINUTES_25,
+  currentShortBreakTime: MINUTES_5,
+  currentLongBreakTime: MINUTES_15,
+};
 
 export const timerSlice = createSlice({
-    name: 'pomodoroTimer',
-    initialState,
-    reducers: {
-        setPomodoroTime: (state, action: PayloadAction<number>) => {
-            state.pomodoroTime = action.payload;
-        },
-        setShortBreakTime: (state, action: PayloadAction<number>) => {
-            state.shortBreakTime = action.payload;
-        },
-        setLongBreakTime: (state, action: PayloadAction<number>) => {
-            state.longBreakTime = action.payload;
-        },
-    }
+  name: "pomodoroTimer",
+  initialState,
+  reducers: {
+    setCurrentTimeForTimerType: (
+      state,
+      action: PayloadAction<TimeAndTimerTypePayload>
+    ) => {
+      const { time, timerType } = action.payload;
+
+      if (timerType === TimerType.FOCUS) {
+        state.currentPomodoroTime = time;
+      }
+
+      if (timerType === TimerType.SHORT_BREAK) {
+        state.currentShortBreakTime = time;
+      }
+
+      if (timerType === TimerType.LONG_BREAK) {
+        state.currentLongBreakTime = time;
+      }
+    },
+    setDefaultTimeForTimerType: (
+      state,
+      action: PayloadAction<TimeAndTimerTypePayload>
+    ) => {
+      const { time, timerType } = action.payload;
+
+      if (timerType === TimerType.FOCUS) {
+        state.defaultPomodoroTime = time;
+      }
+
+      if (timerType === TimerType.SHORT_BREAK) {
+        state.defaultShortBreakTime = time;
+      }
+
+      if (timerType === TimerType.LONG_BREAK) {
+        state.defaultLongBreakTime = time;
+      }
+    },
+  },
 });
 
-export const { setPomodoroTime, setShortBreakTime, setLongBreakTime } = timerSlice.actions;
+export const { setCurrentTimeForTimerType } = timerSlice.actions;
 export default timerSlice.reducer;

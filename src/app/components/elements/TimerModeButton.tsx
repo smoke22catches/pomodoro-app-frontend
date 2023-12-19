@@ -1,7 +1,7 @@
 import { Clickable } from "../interfaces/Clickable";
 
 export default function TimerModeButton(props: TimerButtonProps) {
-  const { name, active, onClick } = props;
+  const { name, active, availableForSwitch, onClick } = props;
 
   // Tailwind classes
   const colorClasses = active ? "bg-chocolate" : "bg-red-900";
@@ -10,8 +10,15 @@ export default function TimerModeButton(props: TimerButtonProps) {
   const shadowClasses = active ? "inner-shadow-lg" : "shadow-lg";
   const classes = `${colorClasses} ${shapeClasses} ${positionClasses} ${shadowClasses}`;
 
+  const hadnleClick = (onClick: (() => void) | undefined) => {
+    if (!availableForSwitch) return;
+    if (!onClick) return;
+
+    onClick();
+  };
+
   return (
-    <button className={classes} onClick={onClick}>
+    <button className={classes} onClick={() => hadnleClick(onClick)}>
       {name}
     </button>
   );
@@ -20,4 +27,5 @@ export default function TimerModeButton(props: TimerButtonProps) {
 declare interface TimerButtonProps extends Clickable {
   name: string;
   active: boolean;
+  availableForSwitch: boolean;
 }

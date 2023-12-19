@@ -4,12 +4,22 @@ import { useState } from "react";
 import TimerModeButton from "../elements/TimerModeButton";
 import TimerClock from "../elements/TimerClock";
 import TimerStartButton from "../elements/TimerStartButton";
+import { TimerType } from "../../types";
+import { setCurrentTimerType } from "../../../redux/features/timerTypeSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 
 const MINUTES_25 = 25 * 60 * 1000; // 25 minutes in milliseconds
 
 export default function Timer() {
-  const [currentTimer, setCurrentTimer] = useState<TimerType>(TimerType.FOCUS);
+  const dispatch = useAppDispatch();
+  const currentTimer = useAppSelector(
+    (state) => state.timerTypeSlice.currentTimerType
+  );
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+
+  const switchTimer = (timerType: TimerType) => {
+    dispatch(setCurrentTimerType(timerType));
+  };
 
   return (
     <div className="max-w-sm mx-auto bg-red pb-8vh mt-[10%]">
@@ -18,17 +28,20 @@ export default function Timer() {
           <TimerModeButton
             name="Pomodoro"
             active={currentTimer === TimerType.FOCUS}
-            onClick={() => setCurrentTimer(TimerType.FOCUS)}
+            availableForSwitch={!isTimerRunning}
+            onClick={() => switchTimer(TimerType.FOCUS)}
           />
           <TimerModeButton
             name="Short Break"
             active={currentTimer === TimerType.SHORT_BREAK}
-            onClick={() => setCurrentTimer(TimerType.SHORT_BREAK)}
+            availableForSwitch={!isTimerRunning}
+            onClick={() => switchTimer(TimerType.SHORT_BREAK)}
           />
           <TimerModeButton
             name="Long Break"
             active={currentTimer === TimerType.LONG_BREAK}
-            onClick={() => setCurrentTimer(TimerType.LONG_BREAK)}
+            availableForSwitch={!isTimerRunning}
+            onClick={() => switchTimer(TimerType.LONG_BREAK)}
           />
         </div>
         <TimerClock
@@ -44,10 +57,4 @@ export default function Timer() {
       </div>
     </div>
   );
-}
-
-enum TimerType {
-  FOCUS,
-  SHORT_BREAK,
-  LONG_BREAK,
 }

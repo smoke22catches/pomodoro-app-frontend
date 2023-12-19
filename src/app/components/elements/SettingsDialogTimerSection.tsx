@@ -1,21 +1,20 @@
-import {
-  setLongBreakTime,
-  setPomodoroTime,
-  setShortBreakTime,
-} from "../../../redux/features/timerSlice";
+import { setCurrentTimeForTimerType } from "../../../redux/features/timerSlice";
 import { useAppSelector } from "../../../redux/hooks";
+import { TimerType } from "../../types";
 import { Styleable } from "../interfaces/Styleable";
 import SettingsTimerField from "./SettingsTimerField";
 
 export default function SettingsDialogTimerSection({
   className,
 }: SettingsDialogTimerSectionProps) {
-  const pomodoroTime = useAppSelector((state) => state.timerSlice.pomodoroTime);
+  const pomodoroTime = useAppSelector(
+    (state) => state.timerSlice.currentPomodoroTime
+  );
   const shortBreakTime = useAppSelector(
-    (state) => state.timerSlice.shortBreakTime
+    (state) => state.timerSlice.currentShortBreakTime
   );
   const longBreakTime = useAppSelector(
-    (state) => state.timerSlice.longBreakTime
+    (state) => state.timerSlice.currentLongBreakTime
   );
 
   return (
@@ -23,17 +22,17 @@ export default function SettingsDialogTimerSection({
       <SettingsTimerField
         label="Pomodoro"
         time={pomodoroTime}
-        reducer={setPomodoroTime}
+        timerType={TimerType.FOCUS}
       />
       <SettingsTimerField
         label="Short Break"
         time={shortBreakTime}
-        reducer={setShortBreakTime}
+        timerType={TimerType.SHORT_BREAK}
       />
       <SettingsTimerField
         label="Long Break"
         time={longBreakTime}
-        reducer={setLongBreakTime}
+        timerType={TimerType.LONG_BREAK}
       />
     </div>
   );

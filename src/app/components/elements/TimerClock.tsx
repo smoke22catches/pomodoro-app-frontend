@@ -1,15 +1,31 @@
-import { useState, useReducer, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { millisecondsToPrintableTime } from "../../../utils/time";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setPomodoroTime } from "../../../redux/features/timerSlice";
+import { setCurrentTimeForTimerType } from "../../../redux/features/timerSlice";
+import { TimerType } from "../../types";
 
 export default function TimerClock(props: TimerClockProps) {
   const dispatch = useAppDispatch();
-  const time = useAppSelector((state) => state.timerSlice.pomodoroTime);
   const { action } = props;
+  const timerType = useAppSelector(
+    (state) => state.timerTypeSlice.currentTimerType
+  );
+  const time = useAppSelector((state) => {
+    switch (timerType) {
+      case TimerType.FOCUS: {
+        return state.timerSlice.currentPomodoroTime;
+      }
+      case TimerType.SHORT_BREAK: {
+        return state.timerSlice.currentShortBreakTime;
+      }
+      case TimerType.LONG_BREAK: {
+        return state.timerSlice.currentLongBreakTime;
+      }
+    }
+  });
   const formatedTime = millisecondsToPrintableTime(time);
   const [lastTimeCheckpoint, setLastTimeCheckpoint] = useState<number>(0);
-  const [intervalId, setIntervalId] = useState<Interval>();
+  const [, setIntervalId] = useState<Interval>();
   const [status, setStatus] = useState<TimerClockStatus>("PAUSED");
 
   useEffect(() => {
@@ -20,9 +36,12 @@ export default function TimerClock(props: TimerClockProps) {
       const newIntervalId = setInterval(() => {
         const timePassed = Date.now() - lastTimeCheckpoint;
         setLastTimeCheckpoint(() => Date.now());
-        // todo changed time
-        dispatch(setPomodoroTime(time - timePassed));
-        // setFormatedTime(() => millisecondsToPrintableTime(timeToEnd));
+        dispatch(
+          setCurrentTimeForTimerType({
+            time: time - timePassed,
+            timerType,
+          })
+        );
       }, 500);
 
       setIntervalId(newIntervalId);
@@ -31,9 +50,12 @@ export default function TimerClock(props: TimerClockProps) {
 
     const onPause = () => {
       const timePassed = Date.now() - lastTimeCheckpoint;
-      // todo changed time
-      dispatch(setPomodoroTime(time - timePassed));
-      // setFormatedTime(() => millisecondsToPrintableTime(timeToEnd));
+      dispatch(
+        setCurrentTimeForTimerType({
+          time: time - timePassed,
+          timerType,
+        })
+      );
       setLastTimeCheckpoint(() => Date.now());
     };
 

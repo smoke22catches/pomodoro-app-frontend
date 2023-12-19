@@ -1,15 +1,15 @@
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-import { setPomodoroTime } from "../../../redux/features/timerSlice";
 import { useAppDispatch } from "../../../redux/hooks";
 import {
   millisecondsToMinutes,
   minutesToMilliseconds,
 } from "../../../utils/time";
+import { TimerType } from "../../types";
+import { setCurrentTimeForTimerType } from "../../../redux/features/timerSlice";
 
 export default function SettingsTimerField({
   label,
   time,
-  reducer,
+  timerType,
 }: SettingsTimerFieldProps) {
   const formattedTime = millisecondsToMinutes(time);
   const dispatch = useAppDispatch();
@@ -19,7 +19,7 @@ export default function SettingsTimerField({
     const time = minutesToMilliseconds(minutes);
 
     if (Number.isSafeInteger(time) && time > 0) {
-      dispatch(reducer(time));
+      dispatch(setCurrentTimeForTimerType({ time, timerType }));
     }
   };
 
@@ -45,5 +45,5 @@ declare interface SettingsTimerFieldProps {
    * Time in milliseconds
    */
   time: number;
-  reducer: ActionCreatorWithPayload<number>;
+  timerType: TimerType;
 }
