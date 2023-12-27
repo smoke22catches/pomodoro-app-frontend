@@ -69,8 +69,33 @@ export const timerSlice = createSlice({
         state.defaultLongBreakTime = time;
       }
     },
+    resetTimeToDefaultForOtherTimerTypes: (
+      state,
+      action: PayloadAction<TimerType>
+    ) => {
+      const timerType = action.payload;
+
+      if (timerType === TimerType.FOCUS) {
+        state.currentShortBreakTime = state.defaultShortBreakTime;
+        state.currentLongBreakTime = state.defaultLongBreakTime;
+      }
+
+      if (timerType === TimerType.SHORT_BREAK) {
+        state.currentPomodoroTime = state.defaultPomodoroTime;
+        state.currentLongBreakTime = state.defaultLongBreakTime;
+      }
+
+      if (timerType === TimerType.LONG_BREAK) {
+        state.currentPomodoroTime = state.defaultPomodoroTime;
+        state.currentShortBreakTime = state.defaultShortBreakTime;
+      }
+    },
   },
 });
 
-export const { setCurrentTimeForTimerType } = timerSlice.actions;
+export const {
+  setCurrentTimeForTimerType,
+  setDefaultTimeForTimerType,
+  resetTimeToDefaultForOtherTimerTypes,
+} = timerSlice.actions;
 export default timerSlice.reducer;
