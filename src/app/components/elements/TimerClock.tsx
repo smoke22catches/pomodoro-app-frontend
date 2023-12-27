@@ -71,7 +71,11 @@ export default function TimerClock(props: TimerClockProps) {
     }
   }, [action, lastTimeCheckpoint]);
 
-  return <p className="text-center text-9xl">{formatedTime}</p>;
+  return (
+    <p id="timeDisplay" className="text-center text-9xl">
+      {formatedTime}
+    </p>
+  );
 }
 
 export type TimerClockAction = "START" | "PAUSE";

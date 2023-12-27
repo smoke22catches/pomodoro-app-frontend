@@ -1,4 +1,3 @@
-import { setCurrentTimeForTimerType } from "../../../redux/features/timerSlice";
 import { useAppSelector } from "../../../redux/hooks";
 import { TimerType } from "../../types";
 import { Styleable } from "../interfaces/Styleable";
